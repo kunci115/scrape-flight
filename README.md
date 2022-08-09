@@ -5,7 +5,12 @@ How to use
 1. Docker-compose build
 2. docker-compose up
 3. http://localhost:8000/crawl/start
-   it will return {
+    GET PARAM
+{"flight_number": "SQ318",
+ "date": "2022-08-06",
+  "airline_code": "SQ"}
+
+it will return {
     "status": "Crawling Start",
     "task_id": "450a97de-1545-4e27-aa00-a5fe9de0c903"
 }

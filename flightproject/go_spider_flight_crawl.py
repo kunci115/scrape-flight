@@ -6,10 +6,10 @@ from twisted.internet import reactor
 
 
 def run_spider(spider, flight_code, flight_number, year, month, date):
-    def f(q):
+    def f(q, flight_code, flight_number, year, month, date):
         try:
             runner = crawler.CrawlerRunner()
-            deferred = runner.crawl(spider, flight_code="SQ", flight_number_="318", year="2022", month="8", date="6")
+            deferred = runner.crawl(spider, flight_code=flight_code, flight_number_=flight_number, year=year, month=month, date=date)
             deferred.addBoth(lambda _: reactor.stop())
             reactor.run()
             q.put(None)
@@ -17,7 +17,7 @@ def run_spider(spider, flight_code, flight_number, year, month, date):
             q.put(e)
 
     q = Queue()
-    p = Process(target=f, args=(q,))
+    p = Process(target=f, args=(q, flight_code, flight_number, year, month, date))
     p.start()
     result = q.get()
     p.join()
@@ -29,5 +29,8 @@ def run_spider(spider, flight_code, flight_number, year, month, date):
 if __name__ == "__main__":
     flight_code = sys.argv[1]
     flight_number = sys.argv[2]
-    year = sys.argv[2]
-run_spider(FlightSpider)
+    year = sys.argv[3]
+    month = sys.argv[4]
+    date = sys.argv[5]
+    print("in " + flight_code, flight_number, year, month, date)
+    run_spider(FlightSpider, flight_code, flight_number, year, month, date)

@@ -28,24 +28,26 @@ async def flight_crawl(data):
         # confirm datetime
         format = '%Y-%m-%d'
         datetime_confirmation = datetime.datetime.strptime(date, format)
-        if datetime_confirmation:
-            confirmed_date = str(datetime_confirmation.date()).split('-')
-            year = confirmed_date[0]
-            month = confirmed_date[1]
-            date = confirmed_date[2]
+        confirmed_date = str(datetime_confirmation.date()).split('-')
+        year = confirmed_date[0]
+        month = confirmed_date[1]
+        date = confirmed_date[2]
+        flight_code = flight_number[:2]
+        flight_number_ = flight_number[2:]
+
         # process.crawl(FlightSpider, flight_code="SQ", flight_number_="318", year="2022", month="8", date="6")
 
         # dd = await Airline.create(name="test")
         # await dd.save()
         # print(dd)
-        task = flight_crawl_task.delay(flight_number, date, airline_code)
+        task = flight_crawl_task.delay(flight_code, flight_number_, year, int(month), int(date))
+
         status = {"status": "Crawling Start",
                   "task_id": task.id}
         return status, 200
 
     except ValueError:
-        return ValueError(
-            "Error: Incorrect format given for dates. They must be given like 'yyyy-mm-dd' (ex: '2016-10-01').")
+        return "Date Time Error , format YYYY-mm-dd"
     except Exception as e:
         raise e
         # return e.args, 400
@@ -66,8 +68,7 @@ def get_status(task_id):
     task_result = AsyncResult(task_id)
     result = {
         "task_id": task_id,
-        "task_status": task_result.status,
-        "task_result": task_result.result
+        "task_status": task_result.status
     }
     return JSONResponse(result)
 
