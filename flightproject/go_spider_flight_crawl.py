@@ -1,10 +1,11 @@
+import sys
 from multiprocessing import Queue, Process
 from flightcrawler.spiders.example import FlightSpider
 from scrapy import crawler
 from twisted.internet import reactor
 
 
-def run_spider(spider):
+def run_spider(spider, flight_code, flight_number, year, month, date):
     def f(q):
         try:
             runner = crawler.CrawlerRunner()
@@ -24,4 +25,9 @@ def run_spider(spider):
     if result is not None:
         raise result
 
+
+if __name__ == "__main__":
+    flight_code = sys.argv[1]
+    flight_number = sys.argv[2]
+    year = sys.argv[2]
 run_spider(FlightSpider)

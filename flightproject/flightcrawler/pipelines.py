@@ -4,6 +4,7 @@
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 
 import psycopg2
+from spiders.example import FlightSpider
 # useful for handling different item types with a single interface
 import sqlite3
 
