@@ -1,5 +1,9 @@
 import scrapy
 import json
+import sys
+sys.path.append("..")
+from models.db_models import Flight
+
 
 class FlightSpider(scrapy.Spider):
     name = 'flights-track'
@@ -85,6 +89,18 @@ class FlightSpider(scrapy.Spider):
         data_return = {"flight_status": flight_status,
                        "flight_time": flight_time,
                        "additional_details": additional_details}
+        flight = Flight.create(flight_number=flight_number, airlines=airlines, country_departure=country_departure,
+                      country_departure_short=country_departure_short, country_arrival=country_arrival,
+                      country_arrival_short=country_arrival_short, arrival_status=arrival_status,
+                      late_status=late_status, airport_departure=airport_departure,
+                      flight_departure_date=flight_departure_date, scheduled_departure_time=scheduled_departure_time,
+                      actual_departure_time=actual_departure_time, actual_arrival_time=actual_arrival_time,
+                      terminal_departure=terminal_departure, terminal_arrival=terminal_arrival, gate_departure=gate_departure,
+                      gate_arrival=gate_arrival, airport_arrival=airport_arrival, flight_arrival_date=flight_arrival_date,
+                      scheduled_arrival_time=scheduled_arrival_time
+                      )
+        if flight:
+            print("@@@")
         json_object = json.dumps(data_return, indent=4)
         with open(f'result.json', 'w' )as f:
             f.write(json_object)

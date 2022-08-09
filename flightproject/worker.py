@@ -9,7 +9,7 @@ celery.conf.result_backend = os.environ.get("CELERY_RESULT_BACKEND", "redis://lo
 
 
 def crawl():
-    filename = "executor/go_spider_flight_crawl.py"
+    filename = "go_spider_flight_crawl.py"
     return call(["python", filename])
 
 
