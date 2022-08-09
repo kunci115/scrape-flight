@@ -41,6 +41,13 @@ services:
       - redis
       - worker
 
+  postgre:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: flight_project
+    ports:
+      - 5432:5432
 
   redis:
     image: redis:6-alpine

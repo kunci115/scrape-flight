@@ -1,7 +1,10 @@
+import datetime
+
 import scrapy
 import json
 import sys
-sys.path.append("..")
+
+from flightcrawler.items import FlightcrawlerItem
 
 
 class FlightSpider(scrapy.Spider):
@@ -51,6 +54,16 @@ class FlightSpider(scrapy.Spider):
 
         aircraft_code = flight_t[31]
         aircraft_type = flight_t[32]
+
+        flight_crawler_item = FlightcrawlerItem(flight_number=flight_number, airlines=airlines, country_departure_short=country_departure_short, country_departure=country_departure,
+                                                country_arrival_short=country_arrival_short, country_arrival=country_arrival, arrival_status=arrival_status, late_status=late_status,
+                                                airport_departure=airport_departure,flight_departure_date=flight_departure_date, scheduled_departure_time=scheduled_departure_time,
+                                                flight_departure_timezone=flight_departure_timezone, actual_departure_time=actual_departure_time, terminal_departure=terminal_departure,
+                                                gate_departure=gate_departure, airport_arrival=airport_arrival, flight_arrival_date=flight_arrival_date, scheduled_arrival_time=scheduled_arrival_time,
+                                                flight_arrival_timezone=flight_arrival_timezone,actual_arrival_time=actual_arrival_time,terminal_arrival=terminal_arrival,
+                                                gate_arrival=gate_arrival, flight_time_total=flight_time_total,flight_time_elapsed=flight_time_elapsed,flight_time_remaining=flight_time_remaining, aircraft_code=aircraft_code,
+                                                aircraft_type=aircraft_type)
+        print(flight_crawler_item)
         flight_status = {
             "flight_number": flight_number,
             "airlines": airlines,
@@ -73,36 +86,22 @@ class FlightSpider(scrapy.Spider):
             "flight_arrival_timezone": flight_arrival_timezone,
             "actual_arrival_time": actual_arrival_time,
             "terminal_arrival": terminal_arrival,
-            "gate_arrival": gate_arrival
-        }
-        flight_time = {
-            "total": flight_time_total,
-            "elapsed": flight_time_elapsed,
-            "remaining": flight_time_remaining
-        }
-        additional_details = {
-            "code": aircraft_code,
-            "type": aircraft_type
+            "gate_arrival": gate_arrival,
+
+            "flight_time_total": flight_time_total,
+            "flight_time_elapsed": flight_time_elapsed,
+            "flight_time_remaining": flight_time_remaining,
+
+            "plane_code": aircraft_code,
+            "plane_type": aircraft_type,
+            "created_ts": str(datetime.datetime.now()),
+            "last_updated_ts": str(datetime.datetime.now())
         }
 
-        data_return = {"flight_status": flight_status,
-                       "flight_time": flight_time,
-                       "additional_details": additional_details}
 
-
-        # flight = Flight.create(flight_number=flight_number, airlines=airlines, country_departure=country_departure,
-        #               country_departure_short=country_departure_short, country_arrival=country_arrival,
-        #               country_arrival_short=country_arrival_short, arrival_status=arrival_status,
-        #               late_status=late_status, airport_departure=airport_departure,
-        #               flight_departure_date=flight_departure_date, scheduled_departure_time=scheduled_departure_time,
-        #               actual_departure_time=actual_departure_time, actual_arrival_time=actual_arrival_time,
-        #               terminal_departure=terminal_departure, terminal_arrival=terminal_arrival, gate_departure=gate_departure,
-        #               gate_arrival=gate_arrival, airport_arrival=airport_arrival, flight_arrival_date=flight_arrival_date,
-        #               scheduled_arrival_time=scheduled_arrival_time
-        #               )
-        # if flight:
-        #     print("@@@")
-        json_object = json.dumps(data_return, indent=4)
+        json_object = json.dumps(flight_status, indent=4)
         with open(f'result.json', 'w' )as f:
             f.write(json_object)
-        return data_return
+            f.close()
+        # flight_stat = FlightStatus()
+        return flight_crawler_item

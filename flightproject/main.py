@@ -4,6 +4,8 @@ from celery.result import AsyncResult
 from starlette.responses import JSONResponse
 from subprocess import call
 from scrapy.crawler import CrawlerProcess
+
+from models.db_models import Flight
 from models.model import ModelFlightStatus
 from fastapi import FastAPI, Response, BackgroundTasks
 from worker import flight_crawl_task
@@ -13,6 +15,7 @@ from flightcrawler.spiders.example import FlightSpider
 from scrapy import crawler
 from twisted.internet import reactor, defer
 from tortoise.contrib.fastapi import HTTPNotFoundError, register_tortoise
+
 app = FastAPI(title="Flight Status Scrapper")
 
 
@@ -32,6 +35,9 @@ async def flight_crawl(data):
             date = confirmed_date[2]
         # process.crawl(FlightSpider, flight_code="SQ", flight_number_="318", year="2022", month="8", date="6")
 
+        # dd = await Airline.create(name="test")
+        # await dd.save()
+        # print(dd)
         task = flight_crawl_task.delay(flight_number, date, airline_code)
         status = {"status": "Crawling Start",
                   "task_id": task.id}
@@ -67,7 +73,7 @@ def get_status(task_id):
 
 register_tortoise(
     app,
-    db_url="sqlite://db.sqlite3",
+    db_url="postgres://postgres:1234@postgre:5432/flight_project",
     modules={"models": ["models.db_models"]},
     generate_schemas=True,
     add_exception_handlers=True,

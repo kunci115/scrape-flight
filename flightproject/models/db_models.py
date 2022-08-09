@@ -3,58 +3,34 @@ from enum import Enum
 from tortoise import fields, models, run_async
 from tortoise.contrib.pydantic import pydantic_model_creator
 
-
-class Country(models.Model):
-    id = fields.IntField(pk=True)
-    name = fields.CharField(max_length=255)
-    short_code = fields.CharField(max_length=10)
-
-
-class Airline(models.Model):
-    id = fields.IntField(pk=True)
-    name = fields.CharField(max_length=255)
-
-
-class Plane(models.Model):
-    id = fields.IntField(pk=True)
-    name = fields.CharField(max_length=255)
-
-
-class Airport(models.Model):
-    id = fields.IntField(pk=True)
-    name = fields.CharField(max_length=255)
-    timezone = fields.CharField(max_length=10)
-
-
-class ArrivalStatus(str, Enum):
-    # TODO
-    Arrive = "Arrive"
-
-
-class LateStatus(str, Enum):
-    # TODO
-    Late = "Late"
-
-
 class Flight(models.Model):
     id = fields.IntField(pk=True)
     flight_number = fields.CharField(max_length=10)
-    airline = fields.ForeignKeyField('models.Airline', related_name='flights')
-    country_departure = fields.ForeignKeyField('models.Country', related_name='flight_departure_countries')
-    country_arrival = fields.ForeignKeyField('models.Country', related_name='flight_arrival_countries')
-    arrival_status = fields.CharEnumField(ArrivalStatus)  # TODO
-    late_status = fields.CharEnumField(LateStatus)  # TODO
-    airport_departure = fields.ForeignKeyField('models.Airport', related_name='flight_departure_airports')
-    flight_departure_ts = fields.DatetimeField()
-    actual_departure_ts = fields.DatetimeField()
+    airline = fields.CharField(max_length=255)
+    country_departure = fields.CharField(max_length=255)
+    country_departure_sc = fields.CharField(max_length=10)
+    country_arrival = fields.CharField(max_length=255)
+    arrival_status = fields.CharField(max_length=50)  # TODO
+    late_status = fields.CharField(max_length=50)  # TODO
+    airport_departure = fields.CharField(max_length=255)
+    flight_departure_timezone = fields.CharField(max_length=25)
+    flight_departure_date = fields.CharField(max_length=255)
+    scheduled_departure_time = fields.CharField(max_length=255)
+    scheduled_arrival_time = fields.CharField(max_length=255)
+    actual_departure_time = fields.CharField(max_length=30)
+    actual_arrival_time = fields.CharField(max_length=255)
     terminal_departure = fields.CharField(max_length=255)
     gate_departure = fields.CharField(max_length=255)
-    sc_airport_arrival_id = fields.IntField()
-    flight_arrival_ts = fields.DatetimeField()
-    actual_arrival_ts = fields.DatetimeField()
+    gate_arrival = fields.CharField(max_length=255)
+    flight_arrival_timezone = fields.CharField(max_length=25)
+    flight_arrival_date = fields.CharField(max_length=255)
+    flight_arrival_time = fields.CharField(max_length=255)
     terminal_arrival = fields.CharField(max_length=255)
-    # flight_time_total -> do we need to record this ? since this dynamic calculation (arrival_ts - now)
-    plane = fields.ForeignKeyField('models.Plane', related_name='flights'),
+    flight_time_total = fields.CharField(max_length=255)
+    flight_time_elapsed = fields.CharField(max_length=255)
+    flight_time_remaining = fields.CharField(max_length=255)
+    plane_code = fields.CharField(max_length=255),
+    plane_type = fields.CharField(max_length=255)
     created_ts = fields.DatetimeField()
     last_updated_ts = fields.DatetimeField()
 

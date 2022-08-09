@@ -11,6 +11,9 @@ BOT_NAME = 'flightcrawler'
 
 SPIDER_MODULES = ['flightcrawler.spiders']
 NEWSPIDER_MODULE = 'flightcrawler.spiders'
+ITEM_PIPELINES = {
+   'flightcrawler.pipelines.FlightcrawlerPipeline': 300,
+}
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
