@@ -45,7 +45,7 @@ async def flight_crawl(data):
         # return e.args, 400
 
 
-@app.post('/crawl/start',
+@app.get('/crawl/start',
           summary="Submit every request to flight 3rd party"
           )
 async def submit_api_router(req: ModelFlightStatus, resp:Response):
