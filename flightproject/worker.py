@@ -10,11 +10,13 @@ celery.conf.result_backend = os.environ.get("CELERY_RESULT_BACKEND", "redis://lo
 
 def crawl(flight_code, flight_number_, year, month, date):
     filename = "go_spider_flight_crawl.py"
-    to_month = int(month)
-    to_date = int(date)
+    to_month = str(int(month))
+    to_date = str(int(date))
+    new_month = to_month
+    new_date = to_date
     try:
         # print(call(["python", filename, " ", flight_code, " ", flight_number_, " " , year , " ", str(to_month), " ", str(to_date)]))
-        return call(["python", filename, flight_code, flight_number_, year , str(to_month), str(to_date)])
+        return call(["python", filename, flight_code, flight_number_, year , new_month, new_date])
     except Exception as e:
         print(e)
 
